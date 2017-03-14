@@ -1,0 +1,57 @@
+<div>
+<div class="row">
+<div class="col-md-12" >
+<h1>Your Basket</h1>
+    <p>
+ Basket Size: {{basket.length}}<p>
+ 
+ <hr>
+ 
+ <div class="row">
+ <div class="col-md-1">
+	Item Number
+ </div>
+  <div class="col-md-1">
+    Category
+ </div>
+  <div class="col-md-3">
+    Name
+ </div>
+  <div class="col-md-1">
+    Price
+ </div>
+
+</div> 
+ <div id="showBasket" >
+ <div id="{{b._id}}" class="row" ng-repeat="b in basket  | orderBy:['category',' name', 'price'] track by b._id">
+ <div class="col-md-1">
+		 {{$index+1}}
+		 </div>
+		  <div class="col-md-1"   >
+			{{b.category}}
+		 </div>
+		  <div class="col-md-3">
+			{{b.name}}
+		 </div>
+		  <div class="col-md-1">
+			{{b.price}}
+		 </div>
+		   <!--<div class="col-md-1">
+			 <button type="button" ng-click="editFood($index,m._id,m)">Edit</button>	 		   
+		 </div>
+		   <div class="col-md-1">
+			 <button type="button" ng-click="deleteFood($index,m._id,m)">Remove</button>	 
+		 </div>-->
+<div class="col-md-1">
+			 <button type="button" class="btn btn-primary btn-xs" ng-click="RemoveFromBasket($index,b._id,b)">Remove from Basket</button>
+    &nbsp;
+		 </div>	
+		  <div class="col-md-1">
+			{{b._id}}
+		 </div>
+</div>
+</div> 
+    </div>
+    </div>
+</div>
+</div>
