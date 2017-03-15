@@ -221,11 +221,10 @@ function getBasket(req, res, findOptions, cb) {
 
 
 
-
-app.delete('/api/v1/food/:_id', function (req, res) {
-    console.log('DELETE /api/v1/food');
+app.delete('/api/v1/basketitem/:_id', function (req, res) {
+    console.log('DELETE /api/v1/basketitem');
     console.log(req.params._id);
-    menuCollection.deleteOne({
+    basketCollection.deleteOne({
         _id: ObjectID(req.params._id)
     }, function (err, result) {
         if (err) {
@@ -246,6 +245,8 @@ app.delete('/api/v1/food/:_id', function (req, res) {
     });
 
 });
+
+
 
 app.put('/api/v1/food', function (req, res) {
 
@@ -539,7 +540,7 @@ app.post('/api/v1/loadmenu', function (req, res) { // API restful semantic issue
 
 
 
-//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaa
+
 app.post('/api/v1/loadbasket', function (req, res) { // API restful semantic issues 
 
     console.log('POST /api/v1/loadbasket');
@@ -621,7 +622,6 @@ app.delete('/api/v1/deletemenu', function (req, res) {
 
 // If no route is matched by now, it must be a 404
 app.use(function (req, res, next) {
-    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 
     var err = new Error('Route Not Found, are you using the correct http verb / is it defined?');
     err.status = 404;

@@ -1,13 +1,16 @@
 <div class= "container"></div>
 <div class="row">
 <div class="col-sm-8" >
+    
+    <a name="Food"></a> 
+
 <h1>Menu ChipperMEAN</h1>
 {{ sum() }}
 <hr>
  
 	<div class="row">
 		<div class="col-md-3">
-		  <button type="button" class="btn btn-primary btn-m" ng-click="loadMenu()" ng-disabled="asynchWait" >Load Mnus</button>	   
+		  <button type="button" class="btn btn-primary btn-m" ng-click="loadMenu()" ng-disabled="asynchWait" >Load Menua</button>	   
 		</div>
 		<div class="col-md-3">
 		  <button type="button" class="btn btn-primary btn-m" ng-click="deleteMenu()" ng-disabled="asynchWait">Delete Menu</button>	   
@@ -86,28 +89,12 @@
  <div id="{{m._id}}" class="row" ng-repeat="m in menu  | orderBy:['category',' name', 'price'] track by m._id"
  ng-include src="getTemplate(s)"
  >
- <!--<div class="col-md-1">
- {{$index+1}}
- </div>
-  <div class="col-md-3">
-    {{m.category}}
- </div>
-  <div class="col-md-3">
-    {{m.name}}
- </div>
-  <div class="col-md-1">
-    {{m.price}}
- </div>
-   <div class="col-md-1">
-     <button type="button" ng-click="deleteFood($index,m._id)">Remove</button>	
-     <button type="button" ng-click="addFood($index,m._id)">Add</button>	 
 
- </div> 
- 
-</div>-->
 </div>
  
 </div> 
+    <a name="basket"></a> 
+
     
      <h1>Your Basket</h1>
     <p>
@@ -126,7 +113,7 @@
     Name
  </div>
   <div class="col-md-1">
-    Price
+    Price €
  </div>
 
 </div> 
@@ -143,14 +130,14 @@
 			{{b.name}}
 		 </div>
 		  <div class="col-md-1">
-			{{b.price}}
+			<p>€ {{b.price}}</p>
 		 </div>
      
      
      
        
 <div class="col-md-1">
-			 <button type="button" class="btn btn-primary btn-xs" ng-click="RemoveFromBasket($index,b)">Remove from Basket</button>
+			<button type="button" class="btn btn-primary btn-xs" ng-click="deleteBasketItem($index,b._id,b)">Remove from Basket</button>
     &nbsp;
 		 </div>	
 		  <div class="col-md-1">

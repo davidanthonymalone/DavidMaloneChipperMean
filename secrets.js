@@ -12,8 +12,8 @@ var cfEnv = require('cfenv'); // for environment variables
 var cfCore = cfEnv.getAppEnv();
 var absUrl = cfCore.url;
 
-var username = "DGT";
-var password = "DGTPass";
+var username = "";
+var password = "";
 
 
 mysqlCreds_AWS = { // replaced by bluemix if necessary
@@ -60,6 +60,8 @@ runtime.database_host = mysqlCreds_AWS.host;
 
 
 
+// https://www.cleardb.com/blog/entry?id=pro-series/segment-100/how-many-mysql-connections-is-enough-for-my-app
+// If you got the error message (code 1226) indicates that the entire MySQL server has run out of connection slots - this is the DoS scenario.
 
 
 
@@ -83,32 +85,32 @@ var reCapthchaPublicKey = "?????????????????";
 
 
 var secret = {
- 
-    isLiveSystem : function () { return runtime.liveSystem;},
-	
-	
-	mongodb : {   
-				  connectionStr : function ()
-				  {	
-					var username = "admin";
-					var password = "donkey";
-					var url      = "ds129459.mlab.com:29459";
-					var database = "webdev";
-					runtime.mongodb =  url + "/" + database;
-					return "mongodb://" + username + ":" + password  + "@" + url + "/" + database;
-				  },
-				  
-				  connectionStrLocalhost : function ()
-				  {	
-					var username = "";
-					var password = "";
-					var url      = "localhost:27017";
-					var database = "testing01";
-					runtime.mongodb =  url + "/" + database;
-					//return "mongodb://" + username + ":" + password  + "@" + url + "/" + database; // authenication
-					return "mongodb://" + url + "/" + database;		 // no authenication			
-				  }		
-	          },
+
+    isLiveSystem: function () {
+        return runtime.liveSystem;
+    },
+
+
+    mongodb: {
+        connectionStr: function () {
+            var username = "Admin";
+            var password = "Admin";
+            var url = "ds131900.mlab.com:31900";
+            var database = "chipper";
+            runtime.mongodb = url + "/" + database;
+            return "mongodb://" + username + ":" + password + "@" + url + "/" + database;
+        },
+
+        connectionStrLocalhost: function () {
+            var username = "";
+            var password = "";
+            var url = "localhost:27017";
+            var database = "testing01";
+            runtime.mongodb = url + "/" + database;
+            //return "mongodb://" + username + ":" + password  + "@" + url + "/" + database; // authenication
+            return "mongodb://" + url + "/" + database; // no authenication			
+        }
+    },
 
     AWS: function () {
         // console.log("AWS: requires static ip address for security, not easy with bluemmix");

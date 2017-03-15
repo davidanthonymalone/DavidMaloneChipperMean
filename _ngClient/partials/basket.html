@@ -3,7 +3,7 @@
      <button type="button" class="btn btn-primary btn-m" ng-click="payForMeal()" ng-disabled="asynchWait">Pay for meal?</button>	   
 <div class="row">
 <div class="col-md-12" >
-    <h1>Total price:</h1> <p> {{ sum() }}</p>
+    <h1>Total price:</h1> <p>€ {{ sum() }}</p>
     
 <h1>Your Basket</h1>
     <p>
@@ -51,7 +51,7 @@
 			 <button type="button" ng-click="deleteFood($index,m._id,m)">Remove</button>	 
 		 </div>-->
 <div class="col-md-1">
-			 <button type="button" class="btn btn-primary btn-xs" ng-click="RemoveFromBasket($index,b._id,b)">Remove from Basket</button>
+			 <button type="button" class="btn btn-primary btn-xs" ng-click="removeFromBasket($index,b._id,b)">Remove from Basket</button>
     &nbsp;
 		 </div>	
 		  <div class="col-md-1">

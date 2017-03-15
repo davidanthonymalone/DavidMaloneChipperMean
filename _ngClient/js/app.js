@@ -6,7 +6,7 @@ ChipperMEANApp.run(function( ) {
  // editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 });
 
-ChipperMEANApp.config(['$routeProvider','$httpProvider', '$provide',  '$locationProvider',
+ChipperMEANApp.config(['$routeProvider','$httpProvider', '$provide',   '$locationProvider',
       function($routeProvider, $httpProvider, $provide,  $locationProvider ) {
 // You can not ask for instance during configuration phase - you can ask only for providers.	 
 console.log("ChipperMEANApp.config")	  // runs once only
