@@ -39,7 +39,13 @@ html {
     color: red;
 	background-color : yellow;
 }
-
+#showMenu 
+{
+     float: left;
+  width: 300px;
+  height:200px;
+  border:solid 1px #0F0;
+}
 
 #editFood
 {
@@ -91,6 +97,9 @@ html {
   bottom: 25px;
 }
 
+.right{
+float: right;
+}
 .notifications.bottom-right {
   right: 10px;
   bottom: 25px;

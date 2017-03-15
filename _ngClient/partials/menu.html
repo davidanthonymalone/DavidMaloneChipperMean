@@ -1,7 +1,8 @@
+<div class= "container"></div>
 <div class="row">
-<div class="col-md-10" >
+<div class="col-sm-8" >
 <h1>Menu ChipperMEAN</h1>
-
+{{ sum() }}
 <hr>
  
 	<div class="row">
@@ -25,7 +26,9 @@
 		<select name="singleSelect1" ng-model="filterData.category">
 		
 		  <option value="">All</option>
+            
 		  <option value="Burgers">Burgers</option>
+            
           <option value="Chicken">Chicken</option>
 		  <option value="Chips">Chips</option>
           <option value="Fish">Fish</option>
@@ -83,7 +86,6 @@
  <div id="{{m._id}}" class="row" ng-repeat="m in menu  | orderBy:['category',' name', 'price'] track by m._id"
  ng-include src="getTemplate(s)"
  >
- 
  <!--<div class="col-md-1">
  {{$index+1}}
  </div>
@@ -106,59 +108,54 @@
 </div>
  
 </div> 
-</div> 
-  
-<!--<div id="editFood" ng-show="edittingFood">
-
-
-
-
-	<div class="container">
+    
+     <h1>Your Basket</h1>
+    <p>
+ Basket Size: {{basket.length}}<p>
  
-    <div class="container">
-
-			<div class="row">
-				<div class="col-md-8">
-				   <h3>{{editTitle}}</h3>
-				</div>	
-			
-			</div>	
-		
-			<label ng-hide="editData.index==-1">#No
-				{{editData.index}}
-			</label>
-			<br>
-			<label>category
-				<input type="text" ng-model="editData.category" class="form-control"/>
-			</label>
-			<br>
-			<label>Name
-				<input type="text" ng-model="editData.name" class="form-control"/>
-			</label>
-			<br>			
-			<label>Price
-				<input type="text" ng-model="editData.price" class="form-control"/>
-			</label>	
-	</div>
-	
-	
+ <hr>
+ 
+ <div class="row">
+ <div class="col-md-1">
+	Item Number
  </div>
- 
-	<div class="row">
-		<div class="col-md-8">
-		   
-		</div>	
-		<div class="col-md-2">
-		  <button type="button" ng-click="saveFood()" ng-disabled="asynchWait" >Save</button>	   
-		</div>
-		<div class="col-md-2">
-		  <button type="button" ng-click="cancelFoodEdit()" ng-disabled="asynchWait">Cancel</button>	   
-		</div>		
-	</div> 
+  <div class="col-md-1">
+    Category
+ </div>
+  <div class="col-md-3">
+    Name
+ </div>
+  <div class="col-md-1">
+    Price
+ </div>
+
+</div> 
+
+ <div id="showBasket" >
+ <div id="{{b._id}}" class="row" ng-repeat="b in basket  | orderBy:['category',' name', 'price'] track by b._id">
+ <div class="col-md-1">
+		 {{$index+1}}
+		 </div>
+		  <div class="col-md-1"   >
+			{{b.category}}
+		 </div>
+		  <div class="col-md-3">
+			{{b.name}}
+		 </div>
+		  <div class="col-md-1">
+			{{b.price}}
+		 </div>
+     
+     
+     
+       
+<div class="col-md-1">
+			 <button type="button" class="btn btn-primary btn-xs" ng-click="RemoveFromBasket($index,b)">Remove from Basket</button>
+    &nbsp;
+		 </div>	
+		  <div class="col-md-1">
+		 </div>
 </div>
-
-
-
-<div id="editFoodLayer" ng-show="edittingFood" >
-  to shield the other inputs during an edit 
-</div>-->
+</div> 
+</div> 
+  </div>
