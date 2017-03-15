@@ -35,6 +35,27 @@ appControllers.controller('BasketCtrl', ['$scope', '$resource', '$http',  '$q', 
 			displayBasket(filters);
 		}
 
+            	$scope.payForMeal = function() // load many
+		{ // add test data
+		    $scope.asynchWait = true;		
+			$http.delete('/api/v1/payformeal', {}).then(function success (response) {  	
+			                    // var result = {'errorFlag' : errorFlag , 'insertCount' : insertCount};
+								displayBasket({});
+								$scope.asynchWait = false;
+								nrzLightify({ type: 'success', text: 'Your order has been paid for and is on its way '  }, 5000);
+							}, function errorCallback(error) {
+								$scope.asynchWait = false;
+                               nrzLightify({ type: 'danger', text: 'basket deletion error'  }, 3000);						 						 
+						}); 			 
+		}
+                
+    $scope.sum = function() {
+    var total = 0;
+    angular.forEach($scope.basket, function(key, value) {
+      total += key.price;
+    });
+    return total;
+  }     
 		$scope.reset = function()
 		{
 			$scope.filterData = {};

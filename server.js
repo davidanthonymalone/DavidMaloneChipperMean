@@ -578,7 +578,23 @@ app.post('/api/v1/loadbasket', function (req, res) { // API restful semantic iss
 
 });
 
-
+app.delete('/api/v1/payformeal', function (req, res) {
+    
+    var errorFlag = false; // can use for feedback
+    try {
+        basketCollection.deleteMany({}, function (err, result) {
+            var resJSON = JSON.stringify(result);
+            console.log(resJSON);
+            console.log(result.result.n);
+            res.status(200);
+            res.json(resJSON);
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(404);
+        res.json({});
+    }
+});
 
 
 app.delete('/api/v1/deletemenu', function (req, res) {

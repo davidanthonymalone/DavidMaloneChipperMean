@@ -60,8 +60,6 @@ runtime.database_host = mysqlCreds_AWS.host;
 
 
 
-// https://www.cleardb.com/blog/entry?id=pro-series/segment-100/how-many-mysql-connections-is-enough-for-my-app
-// If you got the error message (code 1226) indicates that the entire MySQL server has run out of connection slots - this is the DoS scenario.
 
 
 
