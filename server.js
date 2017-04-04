@@ -15,40 +15,37 @@ var secrets = require('./secrets.js');
 var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
 
-//console.log(secrets.mongodb.connectionStr());
 
 var menuCollection;
 var basketCollection;
+var specialsCollection;
 
 
 var mDB;
 
 mDB = secrets.mongodb.connectionStr();
-//mDB = secrets.mongodb.connectionStrLocalhost();
 
-// could move the connect string settings to secrets
 var db = MongoClient.connect(mDB, function (err, db) {
     if (err)
         throw err;
     console.log("connected to the mongoDB at: " + runtime.mongodb);
 
-    menuCollection = db.collection('menu'); // creates the collection if it does not exist
+    menuCollection = db.collection('menu');  
     basketCollection = db.collection('basket');
+    specialsCollection = db.collection('specials');
 
 });
 
-// you can research all the commented out features and 'npm install --save' as required
+
 
 var compression = require('compression');
 
 var toobusy = require('toobusy-js');
 
-//var path = require('path');
-//var logger = require('morgan');
+
 var bodyParser = require('body-parser');
 
 
-//var bluemix = require("./routes/middlewares/bluemix.js"); // force https
 
 var helmet = require('helmet');
 
@@ -56,20 +53,18 @@ var connectionListener = false;
 
 var app = express();
 
-app.use(compression()); // must be first, GZIP all assets https://www.sitepoint.com/5-easy-performance-tweaks-node-js-express/
-// log every request to the console
+app.use(compression()); 
 app.use(bodyParser.urlencoded({
     'extended': 'true'
-})); // parse application/x-www-form-urlencoded
-app.use(bodyParser.json()); // parse application/json
+})); 
+app.use(bodyParser.json()); 
 app.use(bodyParser.json({
     type: 'application/vnd.api+json'
-})); // parse application/vnd.api+json as json
+})); 
 
-app.use(helmet()); // by default - removes:  ; adds: X-Frame-Options:SAMEORIGIN
+app.use(helmet()); 
 
-// middleware which blocks requests when we're too busy 
-app.use(function (req, res, next) { // HAS TO BE FIRST 
+app.use(function (req, res, next) { 
     if (toobusy()) {
         res.status(503).send("<p><p>&nbsp&nbsp<h1>The server is busy, please try later, possibly in about 30 seconds.</h1>");
     } else {
@@ -80,21 +75,12 @@ app.use(function (req, res, next) { // HAS TO BE FIRST
 console.log(runtime);
 
 if (runtime.isLocalHost) {
-    // windows if openssl installed
-    // set OPENSSL_CONF=C:\Program Files (x86)\OpenSSL-Win32\bin\openssl.cfg
-    // C:\Program Files (x86)\OpenSSL-Win32\bin\openssl genrsa -out test-key.pem 1024
-
-    // test ssl keys with openssl installed - Google for your platform  https://www.openssl.org/
-    // openssl genrsa -out test-key.pem 1024 
-    // openssl req -new -key test-key.pem -out certrequest.csr
-    // openssl x509 -req -in certrequest.csr -signkey test-key.pem -out test-cert.pem	
+  
     console.log("*** Using temp SSL keys on the nodejs server");
     var privateKey = fs.readFileSync('ssl/test-key.pem');
     var certificate = fs.readFileSync('ssl/test-cert.pem');
 
-    //	var credentials = {key: privateKey, cert: certificate};	
 
-    // use local self-signed cert
     var localCertOptions = {
         key: privateKey,
         cert: certificate,
@@ -110,7 +96,7 @@ if (runtime.isLocalHost) {
     });
 
 
-} else { // not local, its in the cloud somewhere bluemix/heroku
+} else { 
 
     app.set('port', runtime.port);
 
@@ -128,38 +114,35 @@ if (runtime.isLocalHost) {
     }
 }
 
-//app.use(logger('dev'));  // log every request to the console   morgan
+
 app.use(bodyParser.json());
 
 app.enable('trust proxy');
 
-app.use(function (req, res, next) { // req.protocol
+app.use(function (req, res, next) { 
     if (req.secure) {
-        // request was via https, so do no special handling
+        
         next();
     } else {
-        // request was via http, so redirect to https
         console.log("redirecting from http to https");
         res.redirect('https://' + req.headers.host + req.url);
     }
 });
 
-app.use( // public client pages  THIS FINDS _ngClient/index.html
-    "/", //the URL throught which you want to access   static content
-    express.static(__dirname + '/_ngClient') //where your static content is located in your filesystem
+app.use( 
+    "/", 
+    express.static(__dirname + '/_ngClient') 
 );
-app.use( // alias to third party js code etc
-    "/js_thirdparty", //the URL throught which you want to access   content
+app.use( 
+    "/js_thirdparty", 
     express.static(__dirname + '/js_thirdparty')
 );
 
 console.log(__dirname + '/_ngClient');
 
 app.all('/*', function (req, res, next) {
-    // CORS headers,     the * means any client can consume the service???
-    res.header("Access-Control-Allow-Origin", "*"); // restrict it to the required domain
+    res.header("Access-Control-Allow-Origin", "*"); 
     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    // Set custom headers for CORS;
     res.header('Access-Control-Allow-Headers', 'Content-type,Accept,X-Access-Token');
     if (req.method == 'OPTIONS') {
         res.status(200).end();
@@ -168,13 +151,15 @@ app.all('/*', function (req, res, next) {
     }
 });
 
-// middleware is performed before hitting the route handler proper (must pass middleware logic) 
-// causes two authenications app.all('/api/v1/admin/*', [require('./middlewares/validateRequest').validateRequest]);
-//app.all('/api/v1/*', [require('./routes/middlewares/validateRequest').validateRequest]);
+
 
 
 function findMenu(findOptions, cb) {
     menuCollection.find(findOptions).toArray(cb);
+}
+
+function findSpecials(findOptions, cb) {
+    specialsCollection.find(findOptions).toArray(cb);
 }
 
 function getMenu(req, res, findOptions, cb) {
@@ -193,6 +178,26 @@ function getMenu(req, res, findOptions, cb) {
         res.json(results);
     });
 }
+function getSpecials(req, res, findOptions, cb) {
+    findSpecials(findOptions, function (err, results) {
+
+        if (err) { // throw err;
+            console.log("error:");
+            console.log(err.message);
+            res.status(404);
+            res.json({
+                "error": err.message
+            });
+        }
+        // console.log(results);		 
+        res.status(200);
+        res.json(results);
+    });
+}
+
+
+
+
 
 
 
@@ -221,6 +226,7 @@ function getBasket(req, res, findOptions, cb) {
 
 
 
+
 app.delete('/api/v1/basketitem/:_id', function (req, res) {
     console.log('DELETE /api/v1/basketitem');
     console.log(req.params._id);
@@ -238,15 +244,13 @@ app.delete('/api/v1/basketitem/:_id', function (req, res) {
         }
 
         if (!err)
-            console.log("food entry deleted");
+            console.log("basket item deleted");
         res.status(200);
         console.log(JSON.stringify(result))
         res.json(result);
     });
 
 });
-
-
 
 app.put('/api/v1/food', function (req, res) {
 
@@ -271,11 +275,26 @@ app.put('/api/v1/food', function (req, res) {
     });
 });
 
+
+                            
+
+
+
+
+
+
+
+
 app.put('/api/v1/basketitem', function (req, res) {
 
     console.log('PUT /api/v1/basketitem');
     console.log(req.body);
-
+var _id = req.body._id;
+    delete req.body._id;
+    basketCollection.update({
+        "_id": ObjectID(_id)
+    }
+                            )
     basketCollection.insert(req.body, function (err, result) {
         if (err) {
             // throw err;
@@ -340,12 +359,14 @@ app.get('/api/v1/basket', function (req, res) { // allows a browser url call
     getBasket(req, res, findOptions);
 });
 
+
+
 app.post('/api/v1/menu', function (req, res) { // need the post method to pass filters in the body
 
     console.log('POST /api/v1/menu');
 
     var findOptions = {};
-
+    
     // these checks could be normalised to a function
     if (req.body.name) {
         findOptions.name = {
@@ -368,6 +389,31 @@ app.post('/api/v1/menu', function (req, res) { // need the post method to pass f
 });
 
 
+app.post('/api/v1/specials', function (req, res) { // need the post method to pass filters in the body
+
+    console.log('POST /api/v1/specials');
+
+    var findOptions = {};
+    
+    if (req.body.name) {
+        findOptions.name = {
+            $eq: req.body.name
+        };
+    }
+    if (req.body.name) {
+        findOptions.name = {
+            $eq: parseInt(req.body.price)
+        };
+    }
+     if (req.body.category) {
+        findOptions.category = {
+            $eq: req.body.category
+        };
+    }
+
+    console.log(findOptions)
+    getSpecials(req, res, findOptions);
+});
 
 
 app.post('/api/v1/basket', function (req, res) { // need the post method to pass filters in the body
@@ -398,6 +444,71 @@ app.post('/api/v1/basket', function (req, res) { // need the post method to pass
 });
 
 
+
+
+
+
+
+
+app.post('/api/v1/loadspecials', function(req, res) { // API restful semantic issues i.e. loadFoodItemsOnMenu
+    console.log('POST /api/v1/loadspecials');
+    
+   var specials = [{
+            "category": "Burgers",
+            "name": "1/4 Pounder with Cheese and Chips ",
+            "price": 5
+		},
+        {
+             "category": "Chicken",
+            "name": "Chicken Fillet Burger and Chips ",
+            "price": 5
+		},
+        {
+            
+           "category": "Chicken",
+            "name": "Snack Box :- 2 Pieces of Chicken and Chips ",
+            "price": 5
+		},
+        {
+             "category": "Burgers",
+            "name": "Double Cheese Burger and Chips  ",
+            "price": 5
+		},
+        {
+             "category": "Fish",
+            "name": "Fish Box :- Plaice and Chips ",
+            "price": 6
+		},
+        {
+             "category": "Chicken",
+            "name": "6 Nuggets, 2 Plain Sausages and Chips ",
+            "price": 5
+		},
+         {
+            "category": "Burgers",
+            "name": "2 Chips / 2 Plain Burgers / 2 Plain Sausages / Six Nuggets ",
+            "price": 10
+		}];
+		
+	 
+	var errorFlag = false;  // can use for feedback
+	var insertCount = 0;
+	
+	specials.forEach( function (arrayItem)
+	{
+		specialsCollection.insert( arrayItem, function(err, result) {
+			if(err)
+			{
+				errorFlag = true;
+			}
+			insertCount++;
+		});
+	});	 
+	var result = {'errorFlag' : errorFlag , 'insertCount' : insertCount};
+	console.log(result)
+	res.status(200);
+	res.json(result); 
+});
 
 
 
@@ -511,8 +622,7 @@ app.post('/api/v1/loadmenu', function (req, res) { // API restful semantic issue
             "category": "Fish",
             "name": "Fish Box (Plaice)",
             "price": 7.00
-		},
-       
+		}
 	];
 
 
@@ -540,22 +650,11 @@ app.post('/api/v1/loadmenu', function (req, res) { // API restful semantic issue
 
 
 
-
 app.post('/api/v1/loadbasket', function (req, res) { // API restful semantic issues 
 
     console.log('POST /api/v1/loadbasket');
 
-    var basketitems = [
-        {
-            "category": "Specials",
-            "name": "TBA",
-            "price": 3
-		},
-         {
-            "category": "Specials",
-            "name": "TBA",
-            "price": 3
-		}];
+    var basketitems = [];
 
 
     var errorFlag = false; // can use for feedback
@@ -579,23 +678,9 @@ app.post('/api/v1/loadbasket', function (req, res) { // API restful semantic iss
 
 });
 
-app.delete('/api/v1/payformeal', function (req, res) {
-    
-    var errorFlag = false; // can use for feedback
-    try {
-        basketCollection.deleteMany({}, function (err, result) {
-            var resJSON = JSON.stringify(result);
-            console.log(resJSON);
-            console.log(result.result.n);
-            res.status(200);
-            res.json(resJSON);
-        });
-    } catch (e) {
-        console.log(e);
-        res.status(404);
-        res.json({});
-    }
-});
+
+
+
 
 
 app.delete('/api/v1/deletemenu', function (req, res) {
@@ -616,12 +701,27 @@ app.delete('/api/v1/deletemenu', function (req, res) {
     }
 });
 
+app.delete('/api/v1/deletebasket', function (req, res) {
+    console.log('DELETE /api/v1/loadbasket');
+    var errorFlag = false; // can use for feedback
+    try {
+        basketCollection.deleteMany({}, function (err, result) {
+            var resJSON = JSON.stringify(result);
+            console.log(resJSON);
+            console.log(result.result.n);
+            res.status(200);
+            res.json(resJSON);
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(404);
+        res.json({});
+    }
+});
 
-// all the server rest type route paths are mapped in index.js
-// app.use('/', require('./routes')); // will load/use index.js by default from this folder
 
-// If no route is matched by now, it must be a 404
 app.use(function (req, res, next) {
+    console.log("Oops 404");
 
     var err = new Error('Route Not Found, are you using the correct http verb / is it defined?');
     err.status = 404;

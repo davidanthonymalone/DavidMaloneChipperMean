@@ -5,8 +5,7 @@
 <title>Chipper MEAN</title>
 
 <link href="css/main.css" rel="stylesheet" />
-<link href="/favicon.ico" rel="icon" type="image/x-icon" />
-<link rel="icon" href="favicon.ico" />
+
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.0.min.js"></script> 	
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -17,53 +16,60 @@
 	
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-resource.js" ></script>
 	
-<!-- http://bootstrap-notify.remabledesigns.com/ 
-     css pasted into main.css
-	 here also:
-	 
-	 https://cdnjs.cloudflare.com/ajax/libs/bootstrap-notify/0.2.0/css/bootstrap-notify.css
 
--->	
 <script type="text/javascript" src="/js_thirdparty/notify/bootstrap-notify.js"></script> 	 	
 <script type="text/javascript" src="/js_thirdparty/notify/angular-lightify.js"></script>   	
 	
 	
 <script type="text/javascript" src="js/controllers/controllers.js"  > </script>
 <script type="text/javascript" src="js/app.js" > </script>
-<!--
-<link href="bower_components/angular-xeditable/dist/css/xeditable.css" rel="stylesheet">
-<script src="bower_components/angular-xeditable/dist/js/xeditable.js"></script>
--->
- 
+
 </head>
     </br>
     </br>
 
-<h1>Total Order Price: <p> {{ sum() }}</p></h1>
+
 <body ng-app="ChipperMEANApp">
 
      <script type="text/ng-template" id="displayfood">
  
-		 <div class="col-md-1">
+		 <div class="col-md-2">
 		 {{$index+1}}
 		 </div>
-		  <div class="col-md-1"   >
+		  <div class="col-md-2"   >
 			{{m.category}}
 		 </div>
-		  <div class="col-md-3">
+		  <div class="col-md-4">
 			{{m.name}}
 		 </div>
 		  <div class="col-md-1">
-			{{m.price}}
+			{{m.price | currency}}
 		 </div>
-		   <!--<div class="col-md-1">
-			 <button type="button" ng-click="editFood($index,m._id,m)">Edit</button>	 		   
-		 </div>
-		   <div class="col-md-1">
-			 <button type="button" ng-click="deleteFood($index,m._id,m)">Remove</button>	 
-		 </div>-->
 <div class="col-md-1">
 			 <button type="button" class="btn btn-primary btn-xs" ng-click="add2Basket($index,m._id,m)">Add to Basket</button>
+    &nbsp;
+		 </div>	
+		  <div>
+		 </div>
+
+    </script>
+	
+	    <script type="text/ng-template" id="displayspecials">
+ 
+		 <div class="col-md-3">
+		 {{$index+1}}
+		 </div>
+		  <div class="col-md-3"   >
+			{{s.category}}
+		 </div>
+		  <div class="col-md-3">
+			{{s.name}}
+		 </div>
+		  <div class="col-md-1">
+			{{s.price | currency}}
+		 </div>
+<div class="col-md-1">
+		
     &nbsp;
 		 </div>	
 		  <div>
@@ -82,16 +88,10 @@
 			{{b.name}}
 		 </div>
 		  <div class="col-md-1">
-			{{b.price}}
+			{{b.price | currency }}
 		 </div>
-		   <!--<div class="col-md-1">
-			 <button type="button" ng-click="editFood($index,m._id,m)">Edit</button>	 		   
-		 </div>
-		   <div class="col-md-1">
-			 <button type="button" ng-click="deleteFood($index,m._id,m)">Remove</button>	 
-		 </div>-->
 <div class="col-md-1">
-			 <button type="button" class="btn btn-primary btn-xs" ng-click="RemoveFromBasket($index,b._id,b)">Remove from Basket</button>
+			 <button type="button" class="btn btn-lg btn-success" ng-click="RemoveFromBasket($index,b._id,b)">Remove from Basket</button>
     &nbsp;
 		 </div>	
 		  <div class="col-md-1">
@@ -99,7 +99,24 @@
 		 </div>
 
     </script>
+    <script type="text/ng-template"  id="displaySpecials">
  
+		 <div class="col-md-1">
+		 {{$index+1}}
+		 </div>
+		  <div class="col-md-1"   >
+			{{s.category}}
+		 </div>
+		  <div class="col-md-3">
+			{{s.name}}
+		 </div>
+		  <div class="col-md-1">
+			{{s.price}}
+		 </div>
+
+		 
+
+    </script>
    <div class="row">
          <!-- HEADER AND NAVBAR -->
         <header>
@@ -120,16 +137,18 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
+			  <li><a href="#menu">Menu</a></li>
+             <li><a href="#basket">Pay</a></li>
             <li class="active"><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
-            <li><a href="#menu">Menu</a></li>
-             <li><a href="#basket">Pay</a></li>
+            
 
            
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
+	   
  <div nrz-lightify-messages position="top-right"></div>
 
 </div>

@@ -16,6 +16,7 @@ var username = "";
 var password = "";
 
 
+
 mysqlCreds_AWS = { // replaced by bluemix if necessary
 
 };
@@ -94,9 +95,9 @@ var secret = {
     mongodb: {
         connectionStr: function () {
             var username = "Admin";
-            var password = "Admin";
-            var url = "ds131900.mlab.com:31900";
-            var database = "chipper";
+            var password = "donkey";
+            var url = "ds059644.mlab.com:59644";
+            var database = "davids_chipper";
             runtime.mongodb = url + "/" + database;
             return "mongodb://" + username + ":" + password + "@" + url + "/" + database;
         },

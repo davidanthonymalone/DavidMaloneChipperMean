@@ -1,4 +1,5 @@
 var appControllers = angular.module('appControllers', []);
+
  
 
   appControllers.controller('PlaceboCtrl', ['$rootScope','$scope'  ,
@@ -29,50 +30,28 @@ appControllers.controller('BasketCtrl', ['$scope', '$resource', '$http',  '$q', 
   function($scope, $resource,  $http, $q, nrzLightify) {
       		$scope.filterData = {};
 
-      $scope.removeFromBasket = function(index,id,food)
-		{
-			correctIndex =   $scope.basket.indexOf(food);
-			$http.delete('/api/v1/basketitem/'+ id).then(function success (response) {  	
-			                    $scope.basket.splice(correctIndex, 1);
-								nrzLightify({ type: 'success', text: 'basket item deleted'  }, 3000);	
-							}, function errorCallback(error) {
-                               	nrzLightify({ type: 'danger', text: 'basket  deletion error'  }, 3000);				 						 
-						}); 				
-		}
-    
       
       		$scope.requeryBasket = function(filters)
 		{	 
 			displayBasket(filters);
 		}
 
-            	$scope.payForMeal = function() // load many
-		{ // add test data
-		    $scope.asynchWait = true;		
-			$http.delete('/api/v1/payformeal', {}).then(function success (response) {  	
-			                    // var result = {'errorFlag' : errorFlag , 'insertCount' : insertCount};
-								displayBasket({});
-								$scope.asynchWait = false;
-								nrzLightify({ type: 'success', text: 'Your order has been paid for and is on its way '  }, 5000);
-							}, function errorCallback(error) {
-								$scope.asynchWait = false;
-                               nrzLightify({ type: 'danger', text: 'basket deletion error'  }, 3000);						 						 
-						}); 			 
-		}
-                
-    $scope.sum = function() {
-    var total = 0;
-    angular.forEach($scope.basket, function(key, value) {
-      total += key.price;
-    });
-    return total;
-  }     
 		$scope.reset = function()
 		{
 			$scope.filterData = {};
 			displayBasket({});
 		}
-      
+    $scope.sum = function() {
+        var total = 0;
+        angular.forEach($scope.basket, function(key, value) {
+          total += key.price;
+    });
+    return total;
+  }
+	
+	
+	
+	
       $scope.loadBasket = function() // load many
 		{ // add test data
 		    $scope.asynchWait = true;
@@ -86,12 +65,14 @@ appControllers.controller('BasketCtrl', ['$scope', '$resource', '$http',  '$q', 
                                nrzLightify({ type: 'danger', text: 'basket load error'  }, 3000);						 						 
 						}); 
           
+          
 		}
       
         function getBasket()
 		{
 			
-         return $http.post('/api/v1/basket', $scope.filterData); 			
+         return $http.post('/api/v1/basket', $scope.filterData); 		        
+             
 		}
       
       function displayBasket(filters)
@@ -106,38 +87,28 @@ appControllers.controller('BasketCtrl', ['$scope', '$resource', '$http',  '$q', 
 						  {
 							  $scope.basket = [];					  
 						  });
+            
+           
 		}
       
-      
-      displayBasket({}); // load the basket at the start
-		nrzLightify({ type: 'success', text: 'Basket loaded'  }, 6000);	
-    
- 		
 
-  }]); // BasketCtrl	
-	
-	
-appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http',  '$q', 'nrzLightify',
-    function( $scope, $resource, $route,  $http, $q, nrzLightify) {
-		
-		var correctIndex; // ng-repeat orderBy order different to the underlying source array
-		var editMode;		
-		
-		$scope.edittingFood = false;		
-		$scope.asynchWait = false;
-		$scope.filterData = {};
-		$scope.newFoodRaw = {"json" : ""};
-        $scope.newBasketItemRaw = {json: ""};
-		$scope.editId = null;
-				   $scope.sum = function() {
+
+     
+      
+      	
+        
+     
+
+    $scope.subtotal = function() {
     var total = 0;
     angular.forEach($scope.basket, function(key, value) {
       total += key.price;
     });
     return total;
-  } 
-           
-     $scope.deleteBasketItem = function(index,id,food)
+  }
+    
+    
+           $scope.removeFromBasket = function(index,id,food)
 		{
 			correctIndex =   $scope.basket.indexOf(food);
 			$http.delete('/api/v1/basketitem/'+ id).then(function success (response) {  	
@@ -147,64 +118,73 @@ appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http
                                	nrzLightify({ type: 'danger', text: 'basket  deletion error'  }, 3000);				 						 
 						}); 				
 		}
-                   
-   
-     $scope.loadBasket = function() // load many
+           
+           
+           $scope.deleteBasket = function() // load many
 		{ // add test data
-		    $scope.asynchWait = true;
-			$http.post('/api/v1/loadbasket', {}).then(function success (response) {  	
+		    $scope.asynchWait = true;		
+			$http.delete('/api/v1/deletebasket', {}).then(function success (response) {  	
 			                    // var result = {'errorFlag' : errorFlag , 'insertCount' : insertCount};
 								displayBasket({});
 								$scope.asynchWait = false;
-								nrzLightify({ type: 'success', text: 'basket loaded'  }, 3000);
+								nrzLightify({ type: 'success', text: 'basket deleted'  }, 3000);
 							}, function errorCallback(error) {
 								$scope.asynchWait = false;
-                               nrzLightify({ type: 'danger', text: 'basket load error'  }, 3000);						 						 
-						}); 
-          
-		}
-      
-        function getBasket()
+                               nrzLightify({ type: 'danger', text: 'basket deletion error'  }, 3000);						 						 
+						}); 			 
+		}	 
+           
+           
+                $scope.add2Basket = function(index,id,food)
 		{
-			
-         return $http.post('/api/v1/basket', $scope.filterData); 			
-		}
-        $scope.loadBasket = function() // load many
-		{ // add test data
-		    $scope.asynchWait = true;
-			$http.post('/api/v1/loadbasket', {}).then(function success (response) {  	
-			                    // var result = {'errorFlag' : errorFlag , 'insertCount' : insertCount};
-								displayBasket({});
-								$scope.asynchWait = false;
-								nrzLightify({ type: 'success', text: 'basket loaded'  }, 3000);
+            console.log(food);
+                $http.put('/api/v1/basketitem', food).then(function success (response) {  									
+								$scope.newBasketItemRaw = {"json" : ""};										
+								nrzLightify({ type: 'success', text: 'item inserted to basket'  }, 3000);	
 							}, function errorCallback(error) {
-								$scope.asynchWait = false;
-                               nrzLightify({ type: 'danger', text: 'basket load error'  }, 3000);						 						 
+                               nrzLightify({ type: 'danger', text: 'basket item insertion error'  }, 3000);							 						 
 						}); 
-          
+            displayBasket({});
 		}
+	
+        
+   
+      displayBasket({}); // load the basket at the start
+    
+		nrzLightify({ type: 'success', text: 'Basket loaded'  }, 6000);	
+
+    
+ 		
+
+  }]); // BasketCtrl	
+	
+	
+appControllers.controller('MenuCtrl', [  '$scope',  '$resource', '$http',  '$q', 'nrzLightify',
+    function( $scope, $resource,  $http, $q, nrzLightify) {
+		
+		var correctIndex; // ng-repeat orderBy order different to the underlying source array
+		var editMode;		
+		
+		$scope.edittingFood = false;		
+		$scope.asynchWait = false;
+		$scope.filterData = {};
+		$scope.newFoodRaw = {"json" : ""};
+        $scope.newBasketItemRaw = {json: ""};
+		$scope.newSpecialsItemRaw = {json: ""};
+		$scope.editId = null;
+				 
+           $scope.sum = function() {
+        var total = 0;
+        angular.forEach($scope.basket, function(key, value) {
+          total += key.price;
+    });
+    return total;
+  }
 		$scope.requeryMenu = function(filters)
 		{	 
 			displayMenu(filters);
 		}
 
-        function displayBasket(filters)
-		{ 		
-			aPromise = getBasket(filters);
-			
-			aPromise.then(function(response) 
-						  {
-							$scope.basket = response.data;
-						  },
-						  function error(error)
-						  {
-							  $scope.basket = [];					  
-						  });
-		}
-      
-      
-      displayBasket({}); // load the basket at the start
-		nrzLightify({ type: 'success', text: 'Basket loaded'  }, 6000);	
 		$scope.reset = function()
 		{
 			$scope.filterData = {};
@@ -214,21 +194,17 @@ appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http
         
         $scope.add2Basket = function(index,id,food)
 		{
-		console.log(food);
+            console.log(food);
                 $http.put('/api/v1/basketitem', food).then(function success (response) {  									
-								$scope.newBasketItemRaw = {"json" : ""};						
-                    $route.reload();
-
-				
+								$scope.newBasketItemRaw = {"json" : ""};										
 								nrzLightify({ type: 'success', text: 'item inserted to basket'  }, 3000);	
-                                
 							}, function errorCallback(error) {
                                nrzLightify({ type: 'danger', text: 'basket item insertion error'  }, 3000);							 						 
-						}); 		
+						}); 
+            displayBasket({});
 		}
 	
-        
-         
+   
         $scope.deleteFood = function(index,id, food)
 		{
 			correctIndex =   $scope.menu.indexOf(food);
@@ -240,8 +216,7 @@ appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http
 						}); 				
 		}
         
-        
-        
+		
 	
 		$scope.insertFood2 = function() // v2
 		{
@@ -262,6 +237,18 @@ appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http
                                nrzLightify({ type: 'danger', text: 'food insertion error'  }, 3000);							 						 
 						}); 		
 		}
+		
+		
+		
+		$scope.bcategory = function() {
+    	var total = "";
+		angular.forEach($scope.basket, function(key, value) {
+      	total += key.category;
+    });
+    return total;
+  }
+		
+		
 		
 		
 		$scope.loadMenu = function() // load many
@@ -291,26 +278,28 @@ appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http
                                nrzLightify({ type: 'danger', text: 'menu deletion error'  }, 3000);						 						 
 						}); 			 
 		}	 
+        
+         $scope.removeFromBasket = function(index,id,food)
+		{
+			correctIndex =   $scope.basket.indexOf(food);
+			$http.delete('/api/v1/basketitem/'+ id).then(function success (response) {  	
+			                    $scope.basket.splice(correctIndex, 1);
+								nrzLightify({ type: 'success', text: 'basket item deleted'  }, 3000);	
+							}, function errorCallback(error) {
+                               	nrzLightify({ type: 'danger', text: 'basket  deletion error'  }, 3000);				 						 
+						}); 				
+		}
 		
 		function getMenu()
 		{
-			/*
-			// you would use this style if chaining i.e. return deferred and resolve/reject as late as possible
-			var deferred = $q.defer();
-			return $http.get('/api/v1/menu', { })  // returns a promise 
-						.then(function success (response) {  					
-								deferred.resolve(response.data);
-							}, function errorCallback(error) {
- 
-								deferred.reject(error);								 
-						});	
-			return deferred.promise;	
-			*/
-     
          return $http.post('/api/v1/menu', $scope.filterData); 			
 		}	
     
-      
+      function getSpecials()
+		{
+         return $http.post('/api/v1/specials', $scope.filterData); 			
+		}	
+    
 		var aPromise;
 		
 		
@@ -328,11 +317,22 @@ appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http
 						  });
 		}
         
-        
+        function displaySpecials(filters)
+		{ 		
+			aPromise = getSpecials(filters);
+			
+			aPromise.then(function(response) 
+						  {
+							$scope.specials = response.data;
+						  },
+						  function error(error)
+						  {
+							  $scope.specials = [];					  
+						  });
+		}
 			
 		$scope.getTemplate = function (food) {
-			//if (contact.id === $scope.model.selected.id) return 'edit';
-			//else return 'display';
+			
 			return 'displayfood';
 		};		
 		
@@ -376,6 +376,11 @@ appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http
 			}				
 		}		
 		
+		
+		
+		
+		
+		
 		$scope.newFood = function()
 		{
 			$scope.editTitle = "New Food";
@@ -386,8 +391,62 @@ appControllers.controller('MenuCtrl', [  '$scope', '$resource', '$route', '$http
 			$scope.editData.index = -1;
 			$scope.editData._id = null;			
 		}
+        
+        
+        
+      
+        
+        
+        
+         $scope.loadBasket = function() // load many
+		{ // add test data
+		    $scope.asynchWait = true;
+			$http.post('/api/v1/loadbasket', {}).then(function success (response) {  	
+			                    // var result = {'errorFlag' : errorFlag , 'insertCount' : insertCount};
+								displayBasket({});
+								$scope.asynchWait = false;
+								nrzLightify({ type: 'success', text: 'basket loaded'  }, 3000);
+							}, function errorCallback(error) {
+								$scope.asynchWait = false;
+                               nrzLightify({ type: 'danger', text: 'basket load error'  }, 3000);						 						 
+						}); 
+          
+          
+		}
+      
+        function getBasket()
+		{
+			
+         return $http.post('/api/v1/basket', $scope.filterData); 		        
+             
+		}
 		
+		
+        
+        
+           function displayBasket(filters)
+		{ 		
+			aPromise = getBasket(filters);
+			
+			aPromise.then(function(response) 
+						  {
+							$scope.basket = response.data;
+						  },
+						  function error(error)
+						  {
+							  $scope.basket = [];					  
+						  });
+            
+           
+		}
+        
+      
+ 
+        displaySpecials({});
 		displayMenu({}); // load the menu at the start
+        displayBasket({}); // load the menu at the start
+		//
+
 		nrzLightify({ type: 'success', text: 'Menu loaded'  }, 6000);	
  
 		}]); // MenuCtrl
