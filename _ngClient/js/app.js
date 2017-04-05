@@ -34,7 +34,7 @@ console.log("ChipperMEANApp.config")	  // runs once only
 						controller: 'AboutCtrl'
 					  }).	 	 						
 					  otherwise({
-						redirectTo: '/home'
+						redirectTo: '/menu'
 					  });
  			
   }]);

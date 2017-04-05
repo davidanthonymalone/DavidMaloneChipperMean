@@ -48,9 +48,27 @@ appControllers.controller('BasketCtrl', ['$scope', '$resource', '$http',  '$q', 
     });
     return total;
   }
+	  $scope.sumMenu = function() {
+        var total = 0;
+        angular.forEach($scope.menu, function(key, value) {
+          total += key.price;
+    });
+    return total;
+  }
 	
-	
-	
+	$scope.payForMeal = function() // load many
+		{ // add test data
+		    $scope.asynchWait = true;		
+			$http.delete('/api/v1/deletebasket', {}).then(function success (response) {  	
+			                    // var result = {'errorFlag' : errorFlag , 'insertCount' : insertCount};
+								displayBasket({});
+								$scope.asynchWait = false;
+								nrzLightify({ type: 'success', text: 'Your Meal has been paid for and is on its way'  }, 3000);
+							}, function errorCallback(error) {
+								$scope.asynchWait = false;
+                               nrzLightify({ type: 'danger', text: 'Card Declined'  }, 3000);						 						 
+						}); 			 
+		}	
 	
       $scope.loadBasket = function() // load many
 		{ // add test data
@@ -440,7 +458,21 @@ appControllers.controller('MenuCtrl', [  '$scope',  '$resource', '$http',  '$q',
            
 		}
         
+      $scope.sumMenu = function() {
+        var total = 0;
+        angular.forEach($scope.menu, function(key, value) {
+          total += key.price;
+    });
+    return total;
+      }
       
+            $scope.sumSpecials = function() {
+        var total = 0;
+        angular.forEach($scope.specials, function(key, value) {
+          total += key.price;
+    });
+    return total;
+      }
  
         displaySpecials({});
 		displayMenu({}); // load the menu at the start

@@ -16,12 +16,32 @@ var MongoClient = require('mongodb').MongoClient;
 var ObjectID = require('mongodb').ObjectID;
 
 
-var menuCollection;
-var basketCollection;
-var specialsCollection;
 
 
+var myCollection;
+
+var myCollections = {};
 var mDB;
+
+ mDB = secrets.mongodb.connectionStr(); // cloud // these two lines can be improved how?
+//mDB = secrets.mongodb.connectionStrLocalhost();
+
+// could move the connect string settings to secrets
+var db = MongoClient.connect(mDB, function(err, db) {
+    if(err)
+        throw err;
+    console.log("connected to the mongoDB at: " + runtime.mongodb);
+	
+	myCollections.menuCollection = db.collection('menu'); 
+    myCollections.basketCollection = db.collection('basket'); 
+    myCollections.specialsCollection = db.collection('specials'); 
+	
+	
+	
+});
+
+
+ 
 
 mDB = secrets.mongodb.connectionStr();
 
@@ -30,9 +50,7 @@ var db = MongoClient.connect(mDB, function (err, db) {
         throw err;
     console.log("connected to the mongoDB at: " + runtime.mongodb);
 
-    menuCollection = db.collection('menu');  
-    basketCollection = db.collection('basket');
-    specialsCollection = db.collection('specials');
+   
 
 });
 
@@ -155,11 +173,11 @@ app.all('/*', function (req, res, next) {
 
 
 function findMenu(findOptions, cb) {
-    menuCollection.find(findOptions).toArray(cb);
+    myCollections.menuCollection.find(findOptions).toArray(cb);
 }
 
 function findSpecials(findOptions, cb) {
-    specialsCollection.find(findOptions).toArray(cb);
+    myCollections.specialsCollection.find(findOptions).toArray(cb);
 }
 
 function getMenu(req, res, findOptions, cb) {
@@ -204,7 +222,7 @@ function getSpecials(req, res, findOptions, cb) {
 
 
 function findBasket(findOptions, cb) {
-    basketCollection.find(findOptions).toArray(cb);
+    myCollections.basketCollection.find(findOptions).toArray(cb);
 }
 
 function getBasket(req, res, findOptions, cb) {
@@ -230,7 +248,7 @@ function getBasket(req, res, findOptions, cb) {
 app.delete('/api/v1/basketitem/:_id', function (req, res) {
     console.log('DELETE /api/v1/basketitem');
     console.log(req.params._id);
-    basketCollection.deleteOne({
+    myCollections.basketCollection.deleteOne({
         _id: ObjectID(req.params._id)
     }, function (err, result) {
         if (err) {
@@ -257,7 +275,7 @@ app.put('/api/v1/food', function (req, res) {
     console.log('PUT /api/v1/food');
     console.log(req.body);
 
-    menuCollection.insert(req.body, function (err, result) {
+    myCollections.menuCollection.insert(req.body, function (err, result) {
         if (err) {
             // throw err;
             console.log("error:");
@@ -291,11 +309,11 @@ app.put('/api/v1/basketitem', function (req, res) {
     console.log(req.body);
 var _id = req.body._id;
     delete req.body._id;
-    basketCollection.update({
+    myCollections.basketCollection.update({
         "_id": ObjectID(_id)
     }
                             )
-    basketCollection.insert(req.body, function (err, result) {
+   myCollections.basketCollection.insert(req.body, function (err, result) {
         if (err) {
             // throw err;
             console.log("error:");
@@ -320,7 +338,7 @@ app.post('/api/v1/food', function (req, res) { // update food
 
     var _id = req.body._id;
     delete req.body._id;
-    menuCollection.update({
+    myCollections.menuCollection.update({
         "_id": ObjectID(_id)
     }, req.body, {}, function (err, result) {
         if (err) {
@@ -496,7 +514,7 @@ app.post('/api/v1/loadspecials', function(req, res) { // API restful semantic is
 	
 	specials.forEach( function (arrayItem)
 	{
-		specialsCollection.insert( arrayItem, function(err, result) {
+		myCollections.specialsCollection.insert( arrayItem, function(err, result) {
 			if(err)
 			{
 				errorFlag = true;
@@ -630,7 +648,7 @@ app.post('/api/v1/loadmenu', function (req, res) { // API restful semantic issue
     var insertCount = 0;
 
     fooditems.forEach(function (arrayItem) {
-        menuCollection.insert(arrayItem, function (err, result) {
+        myCollections.menuCollection.insert(arrayItem, function (err, result) {
             if (err) {
                 errorFlag = true;
             }
@@ -661,7 +679,7 @@ app.post('/api/v1/loadbasket', function (req, res) { // API restful semantic iss
     var insertCount = 0;
 
     basketitems.forEach(function (arrayItem) {
-        basketCollection.insert(arrayItem, function (err, result) {
+        myCollections.basketCollection.insert(arrayItem, function (err, result) {
             if (err) {
                 errorFlag = true;
             }
@@ -687,7 +705,7 @@ app.delete('/api/v1/deletemenu', function (req, res) {
     console.log('DELETE /api/v1/loadmenu');
     var errorFlag = false; // can use for feedback
     try {
-        menuCollection.deleteMany({}, function (err, result) {
+        myCollections.menuCollection.deleteMany({}, function (err, result) {
             var resJSON = JSON.stringify(result);
             console.log(resJSON);
             console.log(result.result.n);
@@ -705,7 +723,7 @@ app.delete('/api/v1/deletebasket', function (req, res) {
     console.log('DELETE /api/v1/loadbasket');
     var errorFlag = false; // can use for feedback
     try {
-        basketCollection.deleteMany({}, function (err, result) {
+        myCollections.basketCollection.deleteMany({}, function (err, result) {
             var resJSON = JSON.stringify(result);
             console.log(resJSON);
             console.log(result.result.n);
