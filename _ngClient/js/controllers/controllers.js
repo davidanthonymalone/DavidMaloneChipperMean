@@ -11,15 +11,67 @@ var appControllers = angular.module('appControllers', []);
  
  		}]); // PlaceboCtrl
  
-appControllers.controller('HomeCtrl', ['$scope' ,
-		function($scope) {
+appControllers.controller('HomeCtrl', ['$scope' ,'$resource', '$q', 'nrzLightify', 
+		function($scope, $resource, $http, $q, nrzLightify) {
 			
 			$scope.name= "Home";
+            $scope.filterData = {};
 	 
-		}]); // HomeCtrl
+		}]); // HomeCtrl, '
 	
  
-	
+	appControllers.controller('OrderCtrl', ['$scope', '$resource', '$http',  '$q', 'nrzLightify',
+  function($scope, $resource,  $http, $q, nrzLightify) {
+			
+			$scope.name= "Order";
+            
+            
+             $scope.loadOrders = function() // load many
+		{ // add test data
+		    $scope.asynchWait = true;
+			$http.post('/api/v1/loadorders', {}).then(function success (response) {  	
+			                    // var result = {'errorFlag' : errorFlag , 'insertCount' : insertCount};
+								displayOrders({});
+								$scope.asynchWait = false;
+								nrzLightify({ type: 'success', text: 'basket loaded'  }, 3000);
+							}, function errorCallback(error) {
+								$scope.asynchWait = false;
+                               nrzLightify({ type: 'danger', text: 'basket load error'  }, 3000);						 						 
+						}); 
+          
+          
+		}
+      
+        function getOrders()
+		{
+			
+         return $http.post('/api/v1/orders', $scope.filterData); 		        
+             
+		}
+      
+      function displayOrders(filters)
+		{ 		
+			aPromise = getOrders(filters);
+			
+			aPromise.then(function(response) 
+						  {
+							$scope.orders = response.data;
+						  },
+						  function error(error)
+						  {
+							  $scope.orders = [];					  
+						  });
+            
+           
+		}
+      
+            displayOrders({});
+            
+	 
+		}]); 
+
+
+
 appControllers.controller('AboutCtrl', ['$scope', 
   function($scope) {
   
@@ -164,6 +216,22 @@ appControllers.controller('BasketCtrl', ['$scope', '$resource', '$http',  '$q', 
 						}); 
             displayBasket({});
 		}
+                
+                
+                
+            $scope.add2Order = function(basket,total)
+		{
+            console.log(basket, total);
+                $http.put('/api/v1/order', {orderdetails: basket, total}).then(function success (response) {  									
+								$scope.newOrderItemRaw = {"json" : ""};										
+								nrzLightify({ type: 'success', text: 'item inserted to basket'  }, 3000);	
+							}, function errorCallback(error) {
+                               nrzLightify({ type: 'danger', text: 'basket item insertion error'  }, 3000);							 						 
+						}); 
+            displayBasket({});
+		}
+                
+            
 	
         
    
@@ -189,6 +257,7 @@ appControllers.controller('MenuCtrl', [  '$scope',  '$resource', '$http',  '$q',
 		$scope.newFoodRaw = {"json" : ""};
         $scope.newBasketItemRaw = {json: ""};
 		$scope.newSpecialsItemRaw = {json: ""};
+        $scope.newOrderItemRaw = {json: ""};
 		$scope.editId = null;
 				 
            $scope.sum = function() {

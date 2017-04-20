@@ -89,7 +89,7 @@
 		 </div>
 </div>
 </div>
-   <h1>Specials</h1>
+   <h2>Specials related to whats in your basket</h2>
    
  
  <hr>
@@ -145,6 +145,62 @@
 </div>
 </div> 
 </div> 
- <h3>Specials Total {{sumSpecials()}}</h3>
+      <h1>All Specials</h1>
+   
+ 
+ <hr>
+ 
+ <div class="row">
+ <div class="col-md-1">
+	Item Number
+ </div>
+  <div class="col-md-2">
+    Category
+ </div>
+  <div class="col-md-2">
+    Name
+ </div>
+  <div class="col-md-3">
+    Price
+ </div>
+<div class="col-md-2">
+    Savings
+ </div>
+
+</div> 
+
+ <div id="displayspecials" >
+ <div id="{{s._id}}" class="row" ng-repeat="s in specials  | orderBy:['category',' name', 'price'] track by s._id">
+ <div class="col-md-1">
+		 {{$index+1}}
+		 </div>
+		  <div class="col-md-2"   >
+			{{s.category}}
+		 </div>
+		  <div class="col-md-2">
+			{{s.name}}
+		 </div>
+		  <div class="col-md-3">
+			{{s.price | currency}}
+		 </div>
+     <div class="col-md-4">
+			{{ sum() - s.price | currency }}
+		 </div>
+		<div class="col-md-2">
+	<button type="button" class="btn btn-primary btn-xs" ng-click="add2Basket($index,s._id,s)">Add to Basket</button>
+	</div>
+     
+     
+       
+
+
+
+		  
+</div>
+          <h3>Specials Total {{sumSpecials()}}</h3>
+
+</div> 
+</div> 
+ 
   </div>
 </div>

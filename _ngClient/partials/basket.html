@@ -41,15 +41,6 @@
 			{{b.price}}
 		 </div>
      
-     
-     
-            
-		   <!--<div class="col-md-1">
-			 <button type="button" ng-click="editFood($index,m._id,m)">Edit</button>	 		   
-		 </div>
-		   <div class="col-md-1">
-			 <button type="button" ng-click="deleteFood($index,m._id,m)">Remove</button>	 
-		 </div>-->
 <div class="col-md-1">
 			 <button type="button" class="btn btn-primary btn-xs" ng-click="removeFromBasket($index,b._id,b)">Remove</button>
     &nbsp;
@@ -57,6 +48,7 @@
 		  <div class="col-md-1">
 		 </div>
 </div>
+     <button type="button" class="btn btn-primary btn-xs" ng-click="add2Order(basket, sum()); payForMeal();">Add To Order</button>
 </div> 
     </div>
     </div>

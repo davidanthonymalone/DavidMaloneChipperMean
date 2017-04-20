@@ -53,6 +53,29 @@
 		 </div>
 
     </script>
+    
+    <script type="text/ng-template" id="displayorders">
+ 
+		 <div class="col-md-3">
+		 {{$index+1}}
+		 </div>
+		  <div class="col-md-3"   >
+			{{o.category}}
+		 </div>
+		  <div class="col-md-3">
+			{{o.name}}
+		 </div>
+		  <div class="col-md-1">
+			{{o.price | currency}}
+		 </div>
+<div class="col-md-1">
+		
+    &nbsp;
+		 </div>	
+		  <div>
+		 </div>
+
+    </script>
 	
 	    <script type="text/ng-template" id="displayspecials">
  
@@ -139,7 +162,7 @@
           <ul class="nav navbar-nav">
 			  <li class="active"><a href="#menu">Menu</a></li>
              <li><a href="#basket">Pay For Order</a></li>
-           
+           <li><a href="#order">Orders</a></li>
             <li><a href="#about">About</a></li>
             
 
