@@ -834,7 +834,23 @@ app.delete('/api/v1/deletebasket', function (req, res) {
         res.json({});
     }
 });
-
+app.delete('/api/v1/deleteorders', function (req, res) {
+    console.log('DELETE /api/v1/deleteorders');
+    var errorFlag = false; // can use for feedback
+    try {
+        myCollections.orderCollection.deleteMany({}, function (err, result) {
+            var resJSON = JSON.stringify(result);
+            console.log(resJSON);
+            console.log(result.result.n);
+            res.status(200);
+            res.json(resJSON);
+        });
+    } catch (e) {
+        console.log(e);
+        res.status(404);
+        res.json({});
+    }
+});
 
 app.use(function (req, res, next) {
     console.log("Oops 404");

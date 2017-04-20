@@ -89,7 +89,7 @@
 		 </div>
 </div>
 </div>
-   <h2>Specials related to whats in your basket</h2>
+   <h1>Specials related to whats in your basket</h1>
    
  
  <hr>
@@ -113,7 +113,7 @@
 
 </div> 
 
- <div id="displayspecials" >
+ <div id="showSpecials" >
  <div id="{{s._id}}" class="row" ng-repeat="s in specials  | orderBy:['category',' name', 'price'] track by s._id" >
 <div ng-if="(basketCategoryCheck().includes(s.category))">
  <div class="col-md-1">
@@ -179,7 +179,7 @@
 
 </div> 
 
- <div id="displayspecials" >
+ <div id="showSpecials" >
  <div id="{{s._id}}" class="row" ng-repeat="s in specials  | orderBy:['category',' name', 'price'] track by s._id">
  <div class="col-md-1">
 		 {{$index+1}}
@@ -217,7 +217,8 @@
 		  
 </div>
           <h3>Specials Total {{sumSpecials() | currency }}</h3>
-
+     <br/>
+<br/>
 </div> 
 </div> 
  
