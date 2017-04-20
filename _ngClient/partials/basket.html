@@ -7,9 +7,13 @@
     
 <h1>Your Basket</h1>
     <p>
- Basket Size: {{basket.length}}<p>
+ <div class="form-group">
+  <label for="fn">First Name:</label>
+  <input type="text" placeholder="Name" ng-model="firstname" class="form-control" id="fn">
+</div><p>
  
  <hr>
+    
  
  <div class="row">
  <div class="col-md-1">
@@ -38,7 +42,7 @@
 			{{b.name}}
 		 </div>
 		  <div class="col-md-1">
-			{{b.price}}
+			{{b.price | currency}}
 		 </div>
      
 <div class="col-md-1">
@@ -48,7 +52,7 @@
 		  <div class="col-md-1">
 		 </div>
 </div>
-     <button type="button" class="btn btn-primary btn-xs" ng-click="add2Order(basket, sum()); payForMeal();">Add To Order</button>
+     <button type="button" class="btn btn-primary btn-xs" ng-click="addingToOrder(basket, firstname, sum()); payForMeal();">Add To Order</button>
 </div> 
     </div>
     </div>

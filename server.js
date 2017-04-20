@@ -24,9 +24,7 @@ var myCollections = {};
 var mDB;
 
  mDB = secrets.mongodb.connectionStr(); // cloud // these two lines can be improved how?
-//mDB = secrets.mongodb.connectionStrLocalhost();
 
-// could move the connect string settings to secrets
 var db = MongoClient.connect(mDB, function(err, db) {
     if(err)
         throw err;

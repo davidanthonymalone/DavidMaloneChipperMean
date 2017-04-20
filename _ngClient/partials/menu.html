@@ -1,12 +1,12 @@
 <header>
-	Order Page
+	<h1>Menu Page</h1>
 </header>
 
 <div class="container">
   <div class="sidebar">
 	      <h1>Menu</h1>
 <p>
- Menu Size: {{menu.length}}  € {{ sum() }}<p>
+ Menu Size: {{menu.length}} Order Total:  € {{ sum() }}<p>
  
  <hr>
  
@@ -114,8 +114,8 @@
 </div> 
 
  <div id="displayspecials" >
- <div id="{{s._id}}" class="row" ng-repeat="s in specials  | orderBy:['category',' name', 'price'] track by s._id" ng-if="(bcategory().includes(s.category)) || basket.length == 0">
-<div ng-if="(bcategory().includes(s.category)) && basket.length > 1 ">
+ <div id="{{s._id}}" class="row" ng-repeat="s in specials  | orderBy:['category',' name', 'price'] track by s._id" >
+<div ng-if="(basketCategoryCheck().includes(s.category))">
  <div class="col-md-1">
 		 {{$index+1}}
 		 </div>
@@ -128,11 +128,21 @@
 		  <div class="col-md-3">
 			{{s.price | currency}}
 		 </div>
+    <div ng-if="sum() - s.price > 0">
+
      <div class="col-md-4">
 			{{ sum() - s.price | currency }}
 		 </div>
+        </div>
+     <div ng-if="sum() - s.price < 0">
+
+     <div class="col-md-4">
+			<p>0.00</p>
+		 </div>
+        </div>
+    
 		<div class="col-md-2">
-	<button type="button" class="btn btn-primary btn-xs" ng-click="add2Basket($index,s._id,s)">Add to Basket</button>
+	<button type="button" class="btn btn-primary btn-xs" ng-click="addingToBasket($index,s._id,s)">Add to Basket</button>
 	</div>
      
      
@@ -183,11 +193,20 @@
 		  <div class="col-md-3">
 			{{s.price | currency}}
 		 </div>
+    <div ng-if="sum() - s.price > 0">
+
      <div class="col-md-4">
 			{{ sum() - s.price | currency }}
 		 </div>
+        </div>
+     <div ng-if="sum() - s.price < 0">
+
+     <div class="col-md-4">
+			<p>0.00</p>
+		 </div>
+        </div>
 		<div class="col-md-2">
-	<button type="button" class="btn btn-primary btn-xs" ng-click="add2Basket($index,s._id,s)">Add to Basket</button>
+	<button type="button" class="btn btn-primary btn-xs" ng-click="addingToBasket($index,s._id,s)">Add to Basket</button>
 	</div>
      
      
@@ -197,7 +216,7 @@
 
 		  
 </div>
-          <h3>Specials Total {{sumSpecials()}}</h3>
+          <h3>Specials Total {{sumSpecials() | currency }}</h3>
 
 </div> 
 </div> 

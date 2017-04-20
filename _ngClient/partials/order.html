@@ -1,17 +1,22 @@
 <div>
     
-     <button type="button" class="btn btn-primary btn-m" ng-click="" ng-disabled="asynchWait">Pay for meal?</button>	   
+       
 <div class="row">
 <div class="col-md-12" >
-    <h1>Total price: </h1> <p>€</p>
+   
     
-<h1>Your Basket</h1>
-    <p>
- Basket Size: <p>
+<h1>Orders</h1>
+  
  
  <hr>
+    <div>
+        
  
- <div class="row">
+ 
+ <div id="displayorders" >
+ <div id="{{o._id}}" class="row" ng-repeat="o in orders  | orderBy:['category',' name', 'price'] track by o._id">
+     <h1>Customer Name: {{o.firstname}}</h1>
+     <div class="row">
  <div class="col-md-1">
 	Item Number
  </div>
@@ -26,9 +31,9 @@
  </div>
 
 </div> 
- <div id="displayorders" >
- <div id="{{o._id}}" class="row" ng-repeat="o in orders  | orderBy:['category',' name', 'price'] track by o._id">
+     <br/>
      <div ng-repeat="orderinfo in o.orderdetails">
+        
  <div class="col-md-1">
 		 {{$index+1}}
 		 </div>
@@ -39,10 +44,12 @@
 			{{orderinfo.name}}
 		 </div>
 		  <div class="col-md-1">
-			{{orderinfo.price}}
+			{{orderinfo.price | currency}}
 		 </div>
+         <br/>
      </div>
-     
+     <h3>Order Total: {{o.total | currency}}</h3>
+     <br/>
 <div class="col-md-1">
 			 
     &nbsp;
@@ -50,7 +57,7 @@
 		  <div class="col-md-1">
 		 </div>
 </div>
-     
+    
 </div> 
     </div>
     </div>

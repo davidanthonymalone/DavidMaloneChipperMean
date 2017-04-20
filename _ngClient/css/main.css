@@ -6,16 +6,36 @@ header{
 .sidebar{
   padding: 10px;
   width: 50%;
+    
 }
+
+.footerfix{height:4rem;}
+footer{
+  
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  text-align: center;
+  background-color: #222;
+}
+
 
 .content{
   padding: 10px;
   width: 50%;
+    border: 1px;
+   
+    
+        
 }
 
 .container{
+     padding: 10px;
   display: flex;
   flex-direction: row;
+    
+    
 }
 
 .btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {
