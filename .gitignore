@@ -1,2 +1,2 @@
-*secrets.js
-ssl/
+/secrets.js
+/ssl/*.*
